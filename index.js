@@ -8,4 +8,4 @@
 
 var hexo = hexo || {};
 
-hexo.extend.filter.register('after_generate', require('./lib/main'));
+hexo.extend.filter.register('after_generate', require('./src/main'));
