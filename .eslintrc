@@ -1,0 +1,23 @@
+{
+    "parserOptions": {
+        "ecmaVersion": 8,
+        "sourceType": "module"
+    },
+    "rules": {
+        "semi": "error",
+        "quotes": [
+            "error",
+            "single"
+        ],
+        "array-bracket-spacing": "error",
+        "block-spacing": "error",
+        "key-spacing": [
+            "error"
+        ],
+        "keyword-spacing": "error",
+        "space-infix-ops": "error",
+        "no-empty-function": "error",
+        "no-console": "error",
+        "no-unused-vars": "error"
+    }
+}

@@ -1,0 +1,33 @@
+{
+  "name": "hexo-images-watermark",
+  "version": "2.0.0",
+  "description": "用于Hexo构建静态博客时，本地对文章图片添加水印",
+  "main": "index.js",
+  "scripts": {
+    "test": "eslint src/*.js"
+  },
+  "repository": {
+    "type": "https",
+    "url": "https://github.com/SpiritLingPub/hexo-images-watermark"
+  },
+  "bugs": {
+    "url": "https://github.com/SpiritLingPub/hexo-images-watermark/issues"
+  },
+  "keywords": [
+    "hexo",
+    "images",
+    "watermark",
+    "local"
+  ],
+  "author": "SpiritLing",
+  "license": "GPL-3.0-only",
+  "engines": {
+    "node": ">=10"
+  },
+  "devDependencies": {
+    "eslint": "^7.3.1"
+  },
+  "dependencies": {
+    "text-to-svg": "^3.1.5"
+  }
+}

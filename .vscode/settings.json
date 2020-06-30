@@ -1,0 +1,7 @@
+{
+    "prettier.configPath": ".prettierrc",
+    "prettier.arrowParens": "avoid",
+    "editor.codeActionsOnSave": {
+        "source.fixAll": true
+    },
+}
