@@ -2,8 +2,12 @@
 
 const Text2SVG = require('text-to-svg');
 const path = require('path');
-const fs = require('fs');
 
+/**
+ * @description 文字转svg
+ * @param {{[key:string]:string}} options
+ * @returns {Buffer}
+ */
 function text2svg(options) {
     let textToSVG;
     if (options.fontPath) {
@@ -24,24 +28,29 @@ function text2svg(options) {
     const svg = textToSVG.getSVG(options.text, optionsSvg);
     return Buffer.from(svg);
 }
+/**
+ * @description 获取水印图片的buffer
+ * @param {string[]} images
+ * @param {string} watermarkImage
+ * @param {any} route
+ * @returns {Buffer}
+ */
+async function GetWatermarkImageBuffer(images, watermarkImage, route) {
+    if (images.indexOf(watermarkImage) < 0) {
+        throw 'watermarkImage does not exist in the source directory';
+    }
+    const stream = route.get(watermarkImage);
+    var arr = [];
+    stream.on('data', chunk => arr.push(chunk));
 
-function PostsFileList(rootPath) {
-    const files = fs.readdirSync(rootPath);
-    let fileNames = [];
-    files.forEach(item => {
-        const itemPath = path.join(rootPath, item);
-        const stat = fs.statSync(itemPath);
-        if (stat.isFile()) {
-            fileNames.push(itemPath);
-        }
-        if (stat.isDirectory()) {
-            let dirFiles = PostsFileList(itemPath);
-            fileNames = fileNames.concat(dirFiles);
-        }
+    var buffer = await new Promise(function (resolve, reject) {
+        stream.on('end', () => resolve(Buffer.concat(arr)));
+        stream.on('error', () => reject());
     });
-    return fileNames;
+    return buffer;
 }
 module.exports = {
     text2svg,
-    PostsFileList
+    PostsFileList,
+    GetWatermarkImageBuffer
 };

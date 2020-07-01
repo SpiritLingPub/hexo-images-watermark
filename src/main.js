@@ -3,13 +3,16 @@
 const defaultOptions = require('./config');
 const utils = require('./utils');
 const svg2png = require('svg2png');
-const fs = require('fs');
-const path = require('path');
+// const fs = require('fs');
+// const path = require('path');
 const minimatch = require('minimatch');
+const StaticImageRender = require('./render/static');
+
 
 async function ImageWatermark() {
     try {
         const hexo = this;
+        const route = hexo.route;
         const watermarkOptions = hexo.config.watermark || {};
         watermarkOptions.text = watermarkOptions.text || hexo.config.url;
         // If enable is false return
@@ -19,33 +22,59 @@ async function ImageWatermark() {
         // 合并options
         const options = Object.assign(Object.assign({}, defaultOptions), watermarkOptions);
         // 支持的图片格式
-        let targetfile = ['jpg', 'jpeg', 'png', 'gif'];
-        let imgBuffer;
-        // 定义基本路径，source路径和_posts路径，_posts在source下
-        const sourceUrl = path.join(process.cwd(), options.source);
-        const postsUrl = path.join(sourceUrl, options.posts);
-        // 获取_post下的文件
-        const files = utils.PostsFileList(path.join(postsUrl));
+        const staticTargetFile = ['jpg', 'jpeg', 'png'];
+        const dynamicTargetFile = ['gif'];
+        let watermarkBuffer;
         // 过滤获取对应的图片
-        const imgFiles = files.filter(file => {
-            return minimatch(file, '*.{' + targetfile.join(',') + '}', {
+        const allImgFiles = route.list().filter(file => {
+            return minimatch(file, '*.{' + staticTargetFile.join(',') + '}', {
                 nocase: true,
                 matchBase: true
             });
         });
-
+        const staticImgFiles = allImgFiles.filter((item) => item.indexOf('posts') === 0);
+        // 过滤获取对应的图片
+        const dynamicImgFiles = route.list().filter(file => {
+            return minimatch(file, '*.{' + dynamicTargetFile.join(',') + '}', {
+                nocase: true,
+                matchBase: true
+            });
+        });
+        // 无论是图片还是文字都全部转为图片再转为buffer，水印图片的buffer
         if (options.imageEnable) {
-            imgBuffer = fs.readFileSync(path.join(process.cwd(), options.watermarkImage));
+            watermarkBuffer = await utils.GetWatermarkImageBuffer(allImgFiles, options.watermarkImage, route);
         } else {
             const svgBuffer = utils.text2svg(options);
-            imgBuffer = await svg2png(svgBuffer);
+            watermarkBuffer = await svg2png(svgBuffer);
         }
+        // fs.writeFileSync(path.join(process.cwd(), 'watermarkBuffer.png'), watermarkBuffer);
+        /**
+         * 静态图片渲染
+         */
+        await Promise.all(staticImgFiles.map(async (path) => {
+            const stream = route.get(path);
+            const arr = [];
+            stream.on('data', chunk => arr.push(chunk));
+            // eslint-disable-next-line
+            console.log(`\x1b[40;92mINFO\x1b[0m  \x1b[40;94mGenerated Image Process: \x1b[0m\x1b[40;95m${path}\x1b[0m`);
+            const sourceBuffer = await new Promise(function (resolve) {
+                stream.on('end', () => resolve(Buffer.concat(arr)));
+            });
+            const compositeInfo = await StaticImageRender(sourceBuffer, watermarkBuffer, options);
+            if (compositeInfo.isError) {
+                // eslint-disable-next-line
+                console.log(`\x1b[40;92mINFO\x1b[0m  \x1b[40;93mGenerated Image Waring: \x1b[0m\x1b[40;95m${path}\x1b[0m \x1b[40;93mThe width and height of the watermark image are larger than the original image, and cannot be rendered. The original image has been returned.\x1b[0m`);
+            } else {
+                route.set(path, compositeInfo.compositeBuffer);
+            }
 
+        }));
         // eslint-disable-next-line
-        console.log(imgFiles)
-        // eslint-disable-next-line
-        console.log(imgBuffer);
+        console.log(dynamicImgFiles);
+
     } catch (err) {
+        // eslint-disable-next-line
+        console.log(err);
         // eslint-disable-next-line
         console.log(`\x1B[31m${err}\x1B[39m`);
     }

@@ -14,6 +14,5 @@ module.exports = {
     fontSize: 18,
     imagePath: undefined,
     fontPath: undefined,
-    source: 'source',
-    posts: '_posts'
+    bigSkip: true
 };
