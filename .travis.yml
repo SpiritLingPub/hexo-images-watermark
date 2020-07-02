@@ -1,0 +1,22 @@
+language: node_js
+node_js:
+    - 10
+    - 12
+cache: npm
+jobs:
+    include:
+        - stage: master
+          name: 'master'
+          if: branch = master
+          install:
+              - npm install
+              - npm install -g eslint
+          script:
+              - npm run test
+
+notifications:
+    email:
+        recipients:
+            - github@spiritling.pub
+        on_success: never # default: change
+        on_failure: always # default: always
