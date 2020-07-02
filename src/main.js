@@ -3,8 +3,8 @@
 const defaultOptions = require('./config');
 const utils = require('./utils');
 const svg2png = require('svg2png');
-const fs = require('fs');
 const minimatch = require('minimatch');
+const fs = require('fs-extra');
 const GifUtil = require('gifwrap').GifUtil;
 const StaticImageRender = require('./render/static');
 const DynamicImageRender = require('./render/dynamic');
@@ -75,9 +75,10 @@ async function ImageWatermark() {
         /**
          * 动态图片渲染
          */
+        fs.emptyDirSync('public/_spiritling_temp');
         await Promise.all(dynamicImgFiles.map(async (path) => {
             const stream = route.get(path);
-            const tempGif = 'public/_spiritling_temp.gif';
+            const tempGif = `public/_spiritling_temp/${parseInt(Math.random() * 100000000)}`;
             const arr = [];
             stream.on('data', chunk => arr.push(chunk));
             // eslint-disable-next-line
@@ -87,11 +88,11 @@ async function ImageWatermark() {
             });
             const inputGif = await DynamicImageRender(sourceBuffer, watermarkBuffer, options);
             const gif = await GifUtil.write(tempGif, inputGif.frames, inputGif);
-            fs.unlinkSync(tempGif);
             // eslint-disable-next-line
             console.log(`\x1b[40;94mINFO\x1b[0m  \x1b[40;92mGenerated Image Success: \x1b[0m\x1b[40;95m${path}\x1b[0m`);
             route.set(path, gif.buffer);
         }));
+        fs.removeSync('public/_spiritling_temp');
 
     } catch (err) {
         // eslint-disable-next-line
