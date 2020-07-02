@@ -3,6 +3,7 @@
 # hexo-images-watermark
 
 ![favico](./public/images/android-chrome-192x192.png)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FSpiritLingPub%2Fhexo-images-watermark.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2FSpiritLingPub%2Fhexo-images-watermark?ref=badge_shield)
 
 [![Build Status](https://travis-ci.com/SpiritLingPub/hexo-images-watermark.svg?branch=master)](https://travis-ci.com/SpiritLingPub/hexo-images-watermark) [![npm version](https://img.shields.io/npm/v/hexo-images-watermark?label=npm%20version)](https://www.npmjs.com/package/hexo-images-watermark) [![npm package download](https://img.shields.io/npm/dm/hexo-images-watermark?label=npm%20downloads)](https://www.npmjs.com/package/hexo-images-watermark) [![NPM License](https://img.shields.io/npm/l/hexo-images-watermark)](https://spdx.org/licenses/GPL-3.0-only.html)
 
@@ -184,3 +185,7 @@ watermark:
 3. 水印图片也不支持远程和非 soucre 根路径下的文件，也是只支持 `*.jpg`,`*.jpeg`，`*.png` 两种格式图片
 4. 不支持循环满图添加水印
 5. 请使用 `1.1.x` 以上版本， `1.0.x` 是进行 Hexo api 相关测试时使用的，版本杂乱无章，使用 `1.0.x` 版本出现任何问题，概不理会
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FSpiritLingPub%2Fhexo-images-watermark.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2FSpiritLingPub%2Fhexo-images-watermark?ref=badge_large)
