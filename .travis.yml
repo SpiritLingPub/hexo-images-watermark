@@ -5,8 +5,8 @@ node_js:
 cache: npm
 jobs:
     include:
-        - stage: master
-          name: 'master'
+        - stage: Eslint Verified
+          name: 'Eslint Verified'
           install:
               - npm install
               - npm install -g eslint
