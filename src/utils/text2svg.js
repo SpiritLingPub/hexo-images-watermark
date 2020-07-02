@@ -2,7 +2,12 @@
 
 const Text2SVG = require('text-to-svg');
 const path = require('path');
-async function text2svg(options) {
+/**
+ * @description 文字转svg
+ * @param {{[key:string]:string}} options
+ * @returns {Buffer}
+ */
+function text2svg(options) {
     let textToSVG;
     if (options.fontPath) {
         textToSVG = Text2SVG.loadSync(path.join(process.cwd(), options.fontPath));
@@ -22,4 +27,5 @@ async function text2svg(options) {
     const svg = textToSVG.getSVG(options.text, optionsSvg);
     return Buffer.from(svg);
 }
+
 module.exports = text2svg;

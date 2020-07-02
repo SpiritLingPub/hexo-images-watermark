@@ -13,5 +13,6 @@ module.exports = {
     background: 'transparent',
     fontSize: 18,
     imagePath: undefined,
-    fontPath: undefined
+    fontPath: undefined,
+    bigSkip: true
 };
