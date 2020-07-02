@@ -3,7 +3,7 @@
 const defaultOptions = require('./config');
 const utils = require('./utils');
 const svg2png = require('svg2png');
-// const path = require('path');
+const fs = require('fs');
 const minimatch = require('minimatch');
 const GifUtil = require('gifwrap').GifUtil;
 const StaticImageRender = require('./render/static');
@@ -49,7 +49,6 @@ async function ImageWatermark() {
             const svgBuffer = utils.text2svg(options);
             watermarkBuffer = await svg2png(svgBuffer);
         }
-        // fs.writeFileSync(path.join(process.cwd(), 'watermarkBuffer.png'), watermarkBuffer);
         /**
          * 静态图片渲染
          */
@@ -78,6 +77,7 @@ async function ImageWatermark() {
          */
         await Promise.all(dynamicImgFiles.map(async (path) => {
             const stream = route.get(path);
+            const tempGif = 'public/_spiritling_temp.gif';
             const arr = [];
             stream.on('data', chunk => arr.push(chunk));
             // eslint-disable-next-line
@@ -86,19 +86,18 @@ async function ImageWatermark() {
                 stream.on('end', () => resolve(Buffer.concat(arr)));
             });
             const inputGif = await DynamicImageRender(sourceBuffer, watermarkBuffer, options);
-            const gif = await GifUtil.write('public/a.gif', inputGif.frames, inputGif);
+            const gif = await GifUtil.write(tempGif, inputGif.frames, inputGif);
+            fs.unlinkSync(tempGif);
             // eslint-disable-next-line
             console.log(`\x1b[40;94mINFO\x1b[0m  \x1b[40;92mGenerated Image Success: \x1b[0m\x1b[40;95m${path}\x1b[0m`);
             route.set(path, gif.buffer);
         }));
-        // eslint-disable-next-line
-        console.log(dynamicImgFiles);
 
     } catch (err) {
         // eslint-disable-next-line
-        console.log(err);
+        console.log(`\x1b[40;91m${err}\x1b[0m`);
         // eslint-disable-next-line
-        console.log(`\x1B[31m${err}\x1B[39m`);
+        console.log(err);
     }
 }
 
