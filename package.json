@@ -28,6 +28,7 @@
     "eslint": "^7.3.1"
   },
   "dependencies": {
+    "fs-extra": "^9.0.1",
     "gifwrap": "^0.9.2",
     "jimp": "^0.14.0",
     "minimatch": "^3.0.4",
