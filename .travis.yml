@@ -7,7 +7,6 @@ jobs:
     include:
         - stage: master
           name: 'master'
-          if: branch = master
           install:
               - npm install
               - npm install -g eslint
