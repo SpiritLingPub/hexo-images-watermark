@@ -4,7 +4,7 @@
 
 `2020-07-03`
 
--   🛠 README 中的一些内容[1#card-41138753](https://github.com/SpiritLingPub/hexo-images-watermark/projects/1#card-41138753)
+-   🧾 README 中的一些内容[1#card-41138753](https://github.com/SpiritLingPub/hexo-images-watermark/projects/1#card-41138753)
 -   🆕 新增一些配置[1#card-41189622](https://github.com/SpiritLingPub/hexo-images-watermark/projects/1#card-41189622)
 
 # 2.0.0
