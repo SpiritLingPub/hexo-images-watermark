@@ -53,43 +53,52 @@ async function ImageWatermark() {
          * 静态图片渲染
          */
         await Promise.all(staticImgFiles.map(async (path) => {
+            // static为false，则不渲染静态图
+            if (!options.static) {
+                return;
+            }
             const stream = route.get(path);
             const arr = [];
             stream.on('data', chunk => arr.push(chunk));
             // eslint-disable-next-line
-            console.log(`\x1b[40;94mINFO\x1b[0m  \x1b[40;94mGenerated Image Process: \x1b[0m\x1b[40;95m${path}\x1b[0m`);
+            options.log && console.log(`\x1b[40;94mINFO\x1b[0m  \x1b[40;94mGenerated Image Process: \x1b[0m\x1b[40;95m${path}\x1b[0m`);
             const sourceBuffer = await new Promise(function (resolve) {
                 stream.on('end', () => resolve(Buffer.concat(arr)));
             });
             const compositeInfo = await StaticImageRender(sourceBuffer, watermarkBuffer, options);
             if (compositeInfo.isError) {
                 // eslint-disable-next-line
-                console.log(`\x1b[40;94mINFO\x1b[0m  \x1b[40;93mGenerated Image Waring: \x1b[0m\x1b[40;95m${path}\x1b[0m \x1b[40;93mThe width and height of the watermark image are larger than the original image, and cannot be rendered. The original image has been returned.\x1b[0m`);
+                options.log && console.log(`\x1b[40;94mINFO\x1b[0m  \x1b[40;93mGenerated Image Waring: \x1b[0m\x1b[40;95m${path}\x1b[0m \x1b[40;93mThe width and height of the watermark image are larger than the original image, and cannot be rendered. The original image has been returned.\x1b[0m`);
             } else {
                 // eslint-disable-next-line
-                console.log(`\x1b[40;94mINFO\x1b[0m  \x1b[40;92mGenerated Image Success: \x1b[0m\x1b[40;95m${path}\x1b[0m`);
+                options.log && console.log(`\x1b[40;94mINFO\x1b[0m  \x1b[40;92mGenerated Image Success: \x1b[0m\x1b[40;95m${path}\x1b[0m`);
                 route.set(path, compositeInfo.compositeBuffer);
             }
 
         }));
+
         /**
          * 动态图片渲染
          */
         fs.emptyDirSync('public/_spiritling_temp');
         await Promise.all(dynamicImgFiles.map(async (path) => {
+            // dynamic为false，则不渲染动态图
+            if (!options.dynamic) {
+                return;
+            }
             const stream = route.get(path);
             const tempGif = `public/_spiritling_temp/${parseInt(Math.random() * 100000000)}`;
             const arr = [];
             stream.on('data', chunk => arr.push(chunk));
             // eslint-disable-next-line
-            console.log(`\x1b[40;92mINFO\x1b[0m  \x1b[40;94mGenerated Image Process: \x1b[0m\x1b[40;95m${path}\x1b[0m`);
+            options.log && console.log(`\x1b[40;92mINFO\x1b[0m  \x1b[40;94mGenerated Image Process: \x1b[0m\x1b[40;95m${path}\x1b[0m`);
             const sourceBuffer = await new Promise(function (resolve) {
                 stream.on('end', () => resolve(Buffer.concat(arr)));
             });
             const inputGif = await DynamicImageRender(sourceBuffer, watermarkBuffer, options);
             const gif = await GifUtil.write(tempGif, inputGif.frames, inputGif);
             // eslint-disable-next-line
-            console.log(`\x1b[40;94mINFO\x1b[0m  \x1b[40;92mGenerated Image Success: \x1b[0m\x1b[40;95m${path}\x1b[0m`);
+            options.log && console.log(`\x1b[40;94mINFO\x1b[0m  \x1b[40;92mGenerated Image Success: \x1b[0m\x1b[40;95m${path}\x1b[0m`);
             route.set(path, gif.buffer);
         }));
         fs.removeSync('public/_spiritling_temp');
