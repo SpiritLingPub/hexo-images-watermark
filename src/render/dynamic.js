@@ -4,8 +4,6 @@ const jimp = require('jimp');
 const GifUtil = require('gifwrap').GifUtil;
 const utils = require('../utils');
 const sharp = require('sharp');
-// const fs = require('fs');
-// const path = require('path');
 
 /**
  * @param {Buffer} sourceBuffer

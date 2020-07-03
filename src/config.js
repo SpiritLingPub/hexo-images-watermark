@@ -1,6 +1,7 @@
 'use strict';
 
 module.exports = {
+    enable: false,
     imageEnable: false,
     textEnable: false,
     text: 'SpiritLing',
@@ -12,6 +13,9 @@ module.exports = {
     watermarkImage: 'watermark.png',
     background: 'transparent',
     fontSize: 18,
+    static: true,
+    dynamic: true,
+    log: true,
     imagePath: undefined,
     fontPath: undefined,
     bigSkip: true
