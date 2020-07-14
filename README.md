@@ -1,12 +1,8 @@
-<div style="text-align:center">
-
 # hexo-images-watermark
 
 ![favico](./public/images/android-chrome-192x192.png)
 
 [![Build Status](https://travis-ci.com/SpiritLingPub/hexo-images-watermark.svg?branch=master)](https://travis-ci.com/SpiritLingPub/hexo-images-watermark) [![npm version](https://img.shields.io/npm/v/hexo-images-watermark?label=npm%20version)](https://www.npmjs.com/package/hexo-images-watermark) [![npm package download](https://img.shields.io/npm/dm/hexo-images-watermark?label=npm%20downloads)](https://www.npmjs.com/package/hexo-images-watermark) [![NPM License](https://img.shields.io/npm/l/hexo-images-watermark)](https://spdx.org/licenses/GPL-3.0-only.html)
-
-</div>
 
 一款用于 Hexo 静态博客网站生成时对图片添加水印。
 
