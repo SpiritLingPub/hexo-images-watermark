@@ -1,11 +1,12 @@
 {
   "name": "hexo-images-watermark",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "用于Hexo构建静态博客时，本地对文章图片添加水印",
   "main": "index.js",
   "scripts": {
     "test": "eslint src/*.js"
   },
+  "homepage": "https://spiritlingpub.github.io/hexo-images-watermark/",
   "repository": {
     "type": "https",
     "url": "https://github.com/SpiritLingPub/hexo-images-watermark"
