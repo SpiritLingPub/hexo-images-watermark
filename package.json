@@ -6,6 +6,7 @@
   "scripts": {
     "test": "eslint src/*.js"
   },
+  "homepage": "https://spiritlingpub.github.io/hexo-images-watermark/",
   "repository": {
     "type": "https",
     "url": "https://github.com/SpiritLingPub/hexo-images-watermark"
