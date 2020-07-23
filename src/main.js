@@ -23,7 +23,8 @@ async function ImageWatermark() {
         // 合并options
         const options = Object.assign(Object.assign({}, defaultOptions), watermarkOptions);
         if (!Array.isArray(options.directory)) {
-            console.log(`\x1b[40;91m ERROR directory params not array\x1b[0m`);
+            // eslint-disable-next-line
+            console.log('\x1b[40;91m ERROR directory params not array\x1b[0m');
         }
         // 支持的图片格式
         const staticTargetFile = ['jpg', 'jpeg', 'png'];
@@ -33,9 +34,9 @@ async function ImageWatermark() {
         // 过滤获取对应的图片
         let staticImgFileMatch;
         if (options.directory.length === 1) {
-            staticImgFileMatch = `${options.directory.join(",")}/**/*.{${staticTargetFile.join(',')}}`;
+            staticImgFileMatch = `${options.directory.join(',')}/**/*.{${staticTargetFile.join(',')}}`;
         } else {
-            staticImgFileMatch = `{${options.directory.join(",")}}/**/*.{${staticTargetFile.join(',')}}`;
+            staticImgFileMatch = `{${options.directory.join(',')}}/**/*.{${staticTargetFile.join(',')}}`;
         }
         const staticImgFiles = routes.filter((file) => {
             return minimatch(file, staticImgFileMatch, {
@@ -46,9 +47,9 @@ async function ImageWatermark() {
         // 过滤获取对应的图片
         let dynamicImgFileMatch;
         if (options.directory.length === 1) {
-            dynamicImgFileMatch = `${options.directory.join(",")}/**/*.{${dynamicTargetFile.join(',')}}`;
+            dynamicImgFileMatch = `${options.directory.join(',')}/**/*.{${dynamicTargetFile.join(',')}}`;
         } else {
-            dynamicImgFileMatch = `{${options.directory.join(",")}}/**/*.{${dynamicTargetFile.join(',')}}`;
+            dynamicImgFileMatch = `{${options.directory.join(',')}}/**/*.{${dynamicTargetFile.join(',')}}`;
         }
         const dynamicImgFiles = routes.filter(file => {
             return minimatch(file, dynamicImgFileMatch, {
