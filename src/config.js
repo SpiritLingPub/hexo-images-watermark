@@ -18,5 +18,6 @@ module.exports = {
     log: true,
     imagePath: undefined,
     fontPath: undefined,
-    bigSkip: true
+    bigSkip: true,
+    directory: ['posts']
 };

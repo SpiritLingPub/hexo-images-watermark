@@ -16,6 +16,6 @@ jobs:
 notifications:
     email:
         recipients:
-            - github@spiritling.pub
+            - travis.ci@spiritling.pub
         on_success: never # default: change
         on_failure: always # default: always
