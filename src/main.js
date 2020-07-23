@@ -22,26 +22,40 @@ async function ImageWatermark() {
         }
         // 合并options
         const options = Object.assign(Object.assign({}, defaultOptions), watermarkOptions);
+        if (!Array.isArray(options.directory)) {
+            console.log(`\x1b[40;91m ERROR directory params not array\x1b[0m`);
+        }
         // 支持的图片格式
         const staticTargetFile = ['jpg', 'jpeg', 'png'];
         const dynamicTargetFile = ['gif', 'sl'];
         const routes = route.list();
         let watermarkBuffer;
         // 过滤获取对应的图片
-        const allImgFiles = routes.filter(file => {
-            return minimatch(file, '*.{' + staticTargetFile.join(',') + '}', {
+        let staticImgFileMatch;
+        if (options.directory.length === 1) {
+            staticImgFileMatch = `${options.directory.join(",")}/**/*.{${staticTargetFile.join(',')}}`;
+        } else {
+            staticImgFileMatch = `{${options.directory.join(",")}}/**/*.{${staticTargetFile.join(',')}}`;
+        }
+        const staticImgFiles = routes.filter((file) => {
+            return minimatch(file, staticImgFileMatch, {
                 nocase: true,
                 matchBase: true
             });
         });
-        const staticImgFiles = allImgFiles.filter((item) => item.indexOf('posts') === 0);
         // 过滤获取对应的图片
+        let dynamicImgFileMatch;
+        if (options.directory.length === 1) {
+            dynamicImgFileMatch = `${options.directory.join(",")}/**/*.{${dynamicTargetFile.join(',')}}`;
+        } else {
+            dynamicImgFileMatch = `{${options.directory.join(",")}}/**/*.{${dynamicTargetFile.join(',')}}`;
+        }
         const dynamicImgFiles = routes.filter(file => {
-            return minimatch(file, '*.{' + dynamicTargetFile.join(',') + '}', {
+            return minimatch(file, dynamicImgFileMatch, {
                 nocase: true,
                 matchBase: true
             });
-        }).filter((item) => item.indexOf('posts') === 0);
+        });
         // 无论是图片还是文字都全部转为图片再转为buffer，水印图片的buffer
         if (options.imageEnable) {
             watermarkBuffer = await utils.GetWatermarkImageBuffer(allImgFiles, options.watermarkImage, route);
