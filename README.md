@@ -40,7 +40,9 @@ watermark:
 
 **🚀 [查看支持类型](#todo-list)**
 
-**[更新日志](CHANGELOG.md)**
+**🚀 [更新日志](CHANGELOG.md)**
+
+**🚀 [HomePage](https://spiritlingpub.github.io/hexo-images-watermark/)**
 
 从 `2.0.0` 开始支持动态图片 gif 图添加水印，但是位置只能是中间位置，并且一旦水印图片大于源图，则会报错。
 
@@ -60,6 +62,23 @@ watermark:
 | static      |          | true   | 是否渲染静态图                                                      |
 | dynamic     |          | true   | 是否渲染动态图                                                      |
 | log         |          | true   | 是否输出日志信息                                                    |
+| directory   |          | true   | 需要渲染的文件夹，默认为 posts 文件夹                               |
+
+#### directory 例子
+
+!!! 一定要数组形式
+
+其他详细可以查看[更新日志](CHANGELOG.md)
+
+```yml
+watermark:
+    enable: true
+    textEnable: true
+    rotate: -45
+    gravity: centre
+    directory:
+        - posts
+```
 
 ### `text` 和 `image` 共通参数（始终有作用）
 
