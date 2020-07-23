@@ -46,6 +46,8 @@ watermark:
 
 **🚀 [更新日志](CHANGELOG.md)**
 
+**🚀 [HomePage](https://spiritlingpub.github.io/hexo-images-watermark/)**
+
 从 `2.0.0` 开始支持动态图片 gif 图添加水印，但是位置只能是中间位置，并且一旦水印图片大于源图，则会报错。
 
 水印图片大于源图报错问题目前只存在 gif 动态图上，静态图在本版本中已修复。如果依旧希望能够渲染上去，保持参数 `bigSkip`为`false`，则会自动缩放，以适应源图大小。
