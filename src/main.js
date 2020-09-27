@@ -81,13 +81,13 @@ async function ImageWatermark() {
             if (IsEqual(filePath) && options.cache) {
                 const cacheBuffer = GetImageCache(filePath);
                 route.set(filePath, cacheBuffer);
+                // eslint-disable-next-line
                 options.log && console.log(`\x1b[40;93mWARNING\x1b[0m  \x1b[40;93mGenerated Image For Cache: \x1b[0m\x1b[40;95m${GeneralCacheFilePath(filePath)}\x1b[0m \x1b[40;93mPlease confirm that the file is correct\x1b[0m`);
             } else {
                 const stream = route.get(filePath);
                 const arr = [];
                 stream.on('data', chunk => arr.push(chunk));
                 // eslint-disable-next-line
-                console.log(filePath);
                 options.log && console.log(`\x1b[40;94mINFO\x1b[0m  \x1b[40;94mGenerated Image Process: \x1b[0m\x1b[40;95m${filePath}\x1b[0m`);
                 const sourceBuffer = await new Promise(function (resolve) {
                     stream.on('end', () => resolve(Buffer.concat(arr)));
@@ -100,6 +100,7 @@ async function ImageWatermark() {
                     // eslint-disable-next-line
                     options.log && console.log(`\x1b[40;94mINFO\x1b[0m  \x1b[40;92mGenerated Image Success: \x1b[0m\x1b[40;95m${filePath}\x1b[0m`);
                     // 将渲染后的文件放到缓存区，会强制覆盖的
+                    // eslint-disable-next-line
                     options.cache && setImageCache(filePath, compositeInfo.compositeBuffer)
                     route.set(filePath, compositeInfo.compositeBuffer);
                 }
@@ -119,6 +120,7 @@ async function ImageWatermark() {
             if (IsEqual(filePath) && options.cache) {
                 const cacheBuffer = GetImageCache(filePath);
                 route.set(filePath, cacheBuffer);
+                // eslint-disable-next-line
                 options.log && console.log(`\x1b[40;93mWARNING\x1b[0m  \x1b[40;93mGenerated Image For Cache: \x1b[0m\x1b[40;95m${GeneralCacheFilePath(filePath)}\x1b[0m \x1b[40;93mPlease confirm that the file is correct\x1b[0m`);
             } else {
                 const stream = route.get(filePath);
@@ -135,6 +137,7 @@ async function ImageWatermark() {
                 // eslint-disable-next-line
                 options.log && console.log(`\x1b[40;94mINFO\x1b[0m  \x1b[40;92mGenerated Image Success: \x1b[0m\x1b[40;95m${filePath}\x1b[0m`);
                 // 将渲染后的文件放到缓存区，会强制覆盖的
+                // eslint-disable-next-line
                 options.cache && setImageCache(filePath, gif.buffer)
                 route.set(filePath, gif.buffer);
             }
