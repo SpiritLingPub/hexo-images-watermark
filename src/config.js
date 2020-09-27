@@ -19,5 +19,6 @@ module.exports = {
     imagePath: undefined,
     fontPath: undefined,
     bigSkip: true,
-    directory: ['posts']
+    directory: ['posts'],
+    cache: false
 };

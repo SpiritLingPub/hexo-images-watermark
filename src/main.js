@@ -8,6 +8,12 @@ const fs = require('fs-extra');
 const GifUtil = require('gifwrap').GifUtil;
 const StaticImageRender = require('./render/static');
 const DynamicImageRender = require('./render/dynamic');
+const {
+    setImageCache,
+    GetImageCache,
+    GeneralCacheFilePath
+} = require('./utils/cache');
+const IsEqual = require('./utils/isEqual');
 
 
 async function ImageWatermark() {
@@ -67,54 +73,75 @@ async function ImageWatermark() {
         /**
          * 静态图片渲染
          */
-        await Promise.all(staticImgFiles.map(async (path) => {
+        await Promise.all(staticImgFiles.map(async (filePath) => {
             // static为false，则不渲染静态图
             if (!options.static) {
                 return;
             }
-            const stream = route.get(path);
-            const arr = [];
-            stream.on('data', chunk => arr.push(chunk));
-            // eslint-disable-next-line
-            options.log && console.log(`\x1b[40;94mINFO\x1b[0m  \x1b[40;94mGenerated Image Process: \x1b[0m\x1b[40;95m${path}\x1b[0m`);
-            const sourceBuffer = await new Promise(function (resolve) {
-                stream.on('end', () => resolve(Buffer.concat(arr)));
-            });
-            const compositeInfo = await StaticImageRender(sourceBuffer, watermarkBuffer, options);
-            if (compositeInfo.isError) {
+            if (IsEqual(filePath) && options.cache) {
+                const cacheBuffer = GetImageCache(filePath);
+                route.set(filePath, cacheBuffer);
                 // eslint-disable-next-line
-                options.log && console.log(`\x1b[40;94mINFO\x1b[0m  \x1b[40;93mGenerated Image Waring: \x1b[0m\x1b[40;95m${path}\x1b[0m \x1b[40;93mThe width and height of the watermark image are larger than the original image, and cannot be rendered. The original image has been returned.\x1b[0m`);
+                options.log && console.log(`\x1b[40;93mWARNING\x1b[0m  \x1b[40;93mGenerated Image For Cache: \x1b[0m\x1b[40;95m${GeneralCacheFilePath(filePath)}\x1b[0m \x1b[40;93mPlease confirm that the file is correct\x1b[0m`);
             } else {
+                const stream = route.get(filePath);
+                const arr = [];
+                stream.on('data', chunk => arr.push(chunk));
                 // eslint-disable-next-line
-                options.log && console.log(`\x1b[40;94mINFO\x1b[0m  \x1b[40;92mGenerated Image Success: \x1b[0m\x1b[40;95m${path}\x1b[0m`);
-                route.set(path, compositeInfo.compositeBuffer);
+                options.log && console.log(`\x1b[40;94mINFO\x1b[0m  \x1b[40;94mGenerated Image Process: \x1b[0m\x1b[40;95m${filePath}\x1b[0m`);
+                const sourceBuffer = await new Promise(function (resolve) {
+                    stream.on('end', () => resolve(Buffer.concat(arr)));
+                });
+                const compositeInfo = await StaticImageRender(sourceBuffer, watermarkBuffer, options);
+                if (compositeInfo.isError) {
+                    // eslint-disable-next-line
+                    options.log && console.log(`\x1b[40;94mINFO\x1b[0m  \x1b[40;93mGenerated Image Waring: \x1b[0m\x1b[40;95m${filePath}\x1b[0m \x1b[40;93mThe width and height of the watermark image are larger than the original image, and cannot be rendered. The original image has been returned.\x1b[0m`);
+                } else {
+                    // eslint-disable-next-line
+                    options.log && console.log(`\x1b[40;94mINFO\x1b[0m  \x1b[40;92mGenerated Image Success: \x1b[0m\x1b[40;95m${filePath}\x1b[0m`);
+                    // 将渲染后的文件放到缓存区，会强制覆盖的
+                    // eslint-disable-next-line
+                    options.cache && setImageCache(filePath, compositeInfo.compositeBuffer)
+                    route.set(filePath, compositeInfo.compositeBuffer);
+                }
             }
-
         }));
 
         /**
          * 动态图片渲染
          */
         fs.emptyDirSync('public/_spiritling_temp');
-        await Promise.all(dynamicImgFiles.map(async (path) => {
+        await Promise.all(dynamicImgFiles.map(async (filePath) => {
             // dynamic为false，则不渲染动态图
             if (!options.dynamic) {
                 return;
             }
-            const stream = route.get(path);
-            const tempGif = `public/_spiritling_temp/${parseInt(Math.random() * 100000000)}`;
-            const arr = [];
-            stream.on('data', chunk => arr.push(chunk));
-            // eslint-disable-next-line
-            options.log && console.log(`\x1b[40;92mINFO\x1b[0m  \x1b[40;94mGenerated Image Process: \x1b[0m\x1b[40;95m${path}\x1b[0m`);
-            const sourceBuffer = await new Promise(function (resolve) {
-                stream.on('end', () => resolve(Buffer.concat(arr)));
-            });
-            const inputGif = await DynamicImageRender(sourceBuffer, watermarkBuffer, options);
-            const gif = await GifUtil.write(tempGif, inputGif.frames, inputGif);
-            // eslint-disable-next-line
-            options.log && console.log(`\x1b[40;94mINFO\x1b[0m  \x1b[40;92mGenerated Image Success: \x1b[0m\x1b[40;95m${path}\x1b[0m`);
-            route.set(path, gif.buffer);
+            // 如果名字一样，从缓存区取文件，不在进行重新添加水印
+            if (IsEqual(filePath) && options.cache) {
+                const cacheBuffer = GetImageCache(filePath);
+                route.set(filePath, cacheBuffer);
+                // eslint-disable-next-line
+                options.log && console.log(`\x1b[40;93mWARNING\x1b[0m  \x1b[40;93mGenerated Image For Cache: \x1b[0m\x1b[40;95m${GeneralCacheFilePath(filePath)}\x1b[0m \x1b[40;93mPlease confirm that the file is correct\x1b[0m`);
+            } else {
+                const stream = route.get(filePath);
+                const tempGif = `public/_spiritling_temp/${parseInt(Math.random() * 100000000)}`;
+                const arr = [];
+                stream.on('data', chunk => arr.push(chunk));
+                // eslint-disable-next-line
+                options.log && console.log(`\x1b[40;92mINFO\x1b[0m  \x1b[40;94mGenerated Image Process: \x1b[0m\x1b[40;95m${filePath}\x1b[0m`);
+                const sourceBuffer = await new Promise(function (resolve) {
+                    stream.on('end', () => resolve(Buffer.concat(arr)));
+                });
+                const inputGif = await DynamicImageRender(sourceBuffer, watermarkBuffer, options);
+                const gif = await GifUtil.write(tempGif, inputGif.frames, inputGif);
+                // eslint-disable-next-line
+                options.log && console.log(`\x1b[40;94mINFO\x1b[0m  \x1b[40;92mGenerated Image Success: \x1b[0m\x1b[40;95m${filePath}\x1b[0m`);
+                // 将渲染后的文件放到缓存区，会强制覆盖的
+                // eslint-disable-next-line
+                options.cache && setImageCache(filePath, gif.buffer)
+                route.set(filePath, gif.buffer);
+            }
+
         }));
         fs.removeSync('public/_spiritling_temp');
 

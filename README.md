@@ -44,7 +44,7 @@ watermark:
 
 **🚀 [查看支持类型](#todo-list)**
 
-**🚀 [更新日志](CHANGELOG.md)**
+**🚀 [更新日志](CHANGELOG.md)** 最新参数需要查看，README 更新不会太快。
 
 **🚀 [HomePage](https://spiritlingpub.github.io/hexo-images-watermark/)**
 
@@ -177,6 +177,7 @@ gravity 参数可用值：
     -   [x] GIF 动图
         -   [x] 固定位置：中间
 -   [x] 自定义渲染目录（数组形式）
+-   [x] 添加文件缓存
 
 ## 使用注意事项 ⚠️⚠️⚠️
 
