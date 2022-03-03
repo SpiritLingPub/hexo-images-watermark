@@ -101,10 +101,10 @@ gravity 参数可用值：
 | west      | 东   | 左边中间   |
 | south     | 南   | 下边中间   |
 | east      | 西   | 右边中间   |
-| northwest | 东北 | 左上角     |
-| southwest | 东南 | 左下角     |
-| southeast | 西南 | 右下角     |
-| northeast | 西北 | 右上角     |
+| northwest | 西北 | 左上角     |
+| southwest | 西南 | 左下角     |
+| southeast | 东南 | 右下角     |
+| northeast | 东北 | 右上角     |
 
 ### `text` 参数（只对文字水印起作用）
 
